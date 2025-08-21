@@ -1,0 +1,6 @@
+@coreworking_space_booking_backend_HostAddress = http://localhost:5148
+
+GET {{coreworking_space_booking_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
