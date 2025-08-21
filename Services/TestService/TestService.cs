@@ -26,6 +26,8 @@ namespace coreworking_space_booking_backend.Services.TestService
                 _context.Database.CloseConnection();
 
                 string message = $"API is running and DB connection is healthy at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC";
+
+                _appLogger.LogMethodStop(LogSource, message);
                 return BaseResponse<string>.SuccessResponse(message);
             }
             catch (Exception ex)
