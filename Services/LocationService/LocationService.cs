@@ -49,31 +49,58 @@ namespace coreworking_space_booking_backend.Services.LocationService
             }
         }
 
-        public BaseResponse<List<LocationResponse>> GetAllLocations()
+        public BaseResponse<Dictionary<string, List<string>>> GetAllLocations()
         {
             try
             {
                 var locations = _context.Locations
                     .Where(l => l.IsActive)
-                    .Select(l => new LocationResponse
-                    {
-                        Id = l.Id,
-                        Name = l.Name,
-                        Address = l.Address,
-                        
-                    }).ToList();
+                    .Select(l => l.Address)
+                    .ToList();
 
                 if (!locations.Any())
-                    return BaseResponse<List<LocationResponse>>.ErrorResponse(StatusCodes.Status404NotFound, "No locations found");
+                    return BaseResponse<Dictionary<string, List<string>>>.ErrorResponse(StatusCodes.Status404NotFound, "No locations found");
 
-                return BaseResponse<List<LocationResponse>>.SuccessResponse(locations, "Locations retrieved successfully");
+                var result = new Dictionary<string, List<string>>
+        {
+            { "locations", locations }
+        };
+
+                return BaseResponse<Dictionary<string, List<string>>>.SuccessResponse(result, "Locations retrieved successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError(LogSource, nameof(GetAllLocations), ex);
-                return BaseResponse<List<LocationResponse>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal Server Error");
+                return BaseResponse<Dictionary<string, List<string>>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal Server Error");
             }
         }
+
+
+        //public BaseResponse<List<LocationResponse>> GetAllLocations()
+        //{
+        //    try
+        //    {
+        //        var locations = _context.Locations
+        //            .Where(l => l.IsActive)
+        //            .Select(l => new LocationResponse
+        //            {
+        //                //Id = l.Id,
+        //                Name = l.Name,
+        //                //Address = l.Address,
+
+        //            }).ToList();
+
+        //        if (!locations.Any())
+        //            return BaseResponse<List<LocationResponse>>.ErrorResponse(StatusCodes.Status404NotFound, "No locations found");
+
+        //        return BaseResponse<List<LocationResponse>>.SuccessResponse(locations, "Locations retrieved successfully");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(LogSource, nameof(GetAllLocations), ex);
+        //        return BaseResponse<List<LocationResponse>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal Server Error");
+        //    }
+        //}
 
         public BaseResponse<LocationResponse> GetLocationById(GetLocationByIdRequest request)
         {
@@ -86,10 +113,10 @@ namespace coreworking_space_booking_backend.Services.LocationService
 
                 var response = new LocationResponse
                 {
-                    Id = location.Id,
+                    //Id = location.Id,
                     Name = location.Name,
-                    Address = location.Address,
-                    
+                    //Address = location.Address,
+
                 };
 
                 return BaseResponse<LocationResponse>.SuccessResponse(response);

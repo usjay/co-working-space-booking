@@ -44,6 +44,10 @@ namespace coreworking_space_booking_backend.Models
         [Column("availability")]
         public string Availability { get; set; }
 
+
+        public virtual Pricing Pricing { get; set; }
+
+
         [Column("created_at")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }

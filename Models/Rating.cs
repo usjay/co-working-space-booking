@@ -13,12 +13,15 @@ namespace coreworking_space_booking_backend.Models
 
         [Column("product_id")]
         public int ProductId { get; set; }
-
         public Product Product { get; set; }
 
         [Required]
         [Column("value")]
         public double Value { get; set; }
+
+        [Column("user_id")]
+        public int UserId { get; set; }
+        public User User { get; set; }
 
         [Column("created_at")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

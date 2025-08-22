@@ -46,6 +46,14 @@ namespace coreworking_space_booking_backend.Models.Booking
         public string FacilityCode { get; set; }
 
         [Required]
+        [Column("start_time")]
+        public required DateTime StartTime { get; set; }
+
+        [Required]
+        [Column("end_time")]
+        public required DateTime EndTime { get; set; }
+
+        [Required]
         [Column("is_onetime_changed")]
         public required bool IsOnetimeChanged { get; set; }
 

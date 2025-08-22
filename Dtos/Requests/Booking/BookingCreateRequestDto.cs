@@ -20,6 +20,11 @@ namespace coreworking_space_booking_backend.Dtos.Requests.Booking
         [Required]
         public required long PaymentId { get; set; }
 
+        [Required]
+        public required DateTime StartTime { get; set; }
+
+        [Required]
+        public required DateTime EndTime { get; set; }
 
         public long FacilityId { get; set; }
 

@@ -21,6 +21,8 @@ using PayMedia.DotNet.Utils.Logger.Configs;
 using System.Text;
 using System.Text.Json;
 using coreworking_space_booking_backend.Helpers.ImageUpload;
+using coreworking_space_booking_backend.Services.RatingService;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +70,11 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPricingService, PricingService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
+
 builder.Services.AddScoped<ImageUploadHelper>();
+
+//builder.Services.AddScoped<ISpaceService, SpaceService>();
 
 
 

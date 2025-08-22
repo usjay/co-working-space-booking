@@ -24,11 +24,19 @@ namespace coreworking_space_booking_backend.Controllers
             return _locationService.CreateLocation(request);
         }
 
+        //[HttpPost("get-all")]
+        //public BaseResponse<List<LocationResponse>> GetAll()
+        //{
+        //    return _locationService.GetAllLocations();
+        //}
+
+
         [HttpPost("get-all")]
-        public BaseResponse<List<LocationResponse>> GetAll()
+        public BaseResponse<Dictionary<string, List<string>>> GetAll()
         {
             return _locationService.GetAllLocations();
         }
+
 
         [HttpPost("get-by-id")]
         public BaseResponse<LocationResponse> GetById(GetLocationByIdRequest request)

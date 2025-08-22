@@ -19,6 +19,10 @@ namespace coreworking_space_booking_backend.Dtos.Responses.Booking
 
         public string FacilityCode { get; set; }
 
+        public DateTime StartTime { get; set; }
+
+        public DateTime EndTime { get; set; }
+
         public bool IsCanseled { get; set; }
 
         public required bool IsOnetimeChanged { get; set; }
