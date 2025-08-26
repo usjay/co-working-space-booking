@@ -33,13 +33,13 @@ namespace coreworking_space_booking_backend.Controllers
         [HttpPost("delete")]
         public BaseResponse<string> Delete([FromBody] DeletePricingRequest request)
         {
-            return _pricingService.DeletePricing(request.Id);
+            return _pricingService.DeletePricing(request);
         }
 
         [HttpPost("get-by-id")]
         public BaseResponse<PricingResponse> GetById([FromBody] GetPricingByIdRequest request)
         {
-            return _pricingService.GetPricingById(request.Id);
+            return _pricingService.GetPricingById(request);
         }
 
         [HttpPost("get-all")]

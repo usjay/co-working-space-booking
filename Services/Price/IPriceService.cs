@@ -9,8 +9,8 @@ namespace coreworking_space_booking_backend.Services.PricingService
     {
         BaseResponse<string> CreatePricing(PricingRequest request);
         BaseResponse<string> UpdatePricing(UpdatePricingRequest request);
-        BaseResponse<string> DeletePricing(int id);
-        BaseResponse<PricingResponse> GetPricingById(int id);
+        BaseResponse<string> DeletePricing(DeletePricingRequest request);
+        BaseResponse<PricingResponse> GetPricingById(GetPricingByIdRequest request);
         BaseResponse<List<PricingResponse>> GetAllPricings();
     }
 }

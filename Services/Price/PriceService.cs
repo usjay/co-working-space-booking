@@ -41,6 +41,7 @@ namespace coreworking_space_booking_backend.Services.PricingService
                 _context.Pricings.Add(pricing);
                 _context.SaveChanges();
 
+                _logger.LogMethodStop(LogSource, nameof(CreatePricing));
                 return BaseResponse<string>.SuccessResponse("Pricing created successfully");
             }
             catch (Exception ex)
@@ -56,9 +57,12 @@ namespace coreworking_space_booking_backend.Services.PricingService
             {
                 _logger.LogMethodStart(LogSource, nameof(UpdatePricing), request);
 
-                var pricing = _context.Pricings.FirstOrDefault(p => p.Id == request.Id);
+                Pricing pricing = _context.Pricings.FirstOrDefault(p => p.Id == request.Id);
                 if (pricing == null)
+                {
+                    _logger.LogMethodStop(LogSource, nameof(UpdatePricing));
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Pricing not found.");
+                }
 
                 pricing.HourlyRate = request.Hourly;
                 pricing.DailyRate = request.Daily;
@@ -66,6 +70,8 @@ namespace coreworking_space_booking_backend.Services.PricingService
                 pricing.YearlyRate = request.Yearly;
 
                 _context.SaveChanges();
+
+                _logger.LogMethodStop(LogSource, nameof(UpdatePricing));
                 return BaseResponse<string>.SuccessResponse("Pricing updated successfully");
             }
             catch (Exception ex)
@@ -75,18 +81,23 @@ namespace coreworking_space_booking_backend.Services.PricingService
             }
         }
 
-        public BaseResponse<string> DeletePricing(int id)
+        public BaseResponse<string> DeletePricing(DeletePricingRequest request)
         {
             try
             {
-                _logger.LogMethodStart(LogSource, nameof(DeletePricing), id);
+                _logger.LogMethodStart(LogSource, nameof(DeletePricing), request);
 
-                var pricing = _context.Pricings.FirstOrDefault(p => p.Id == id);
+                Pricing pricing = _context.Pricings.FirstOrDefault(p => p.Id == request.Id);
                 if (pricing == null)
+                {
+                    _logger.LogMethodStop(LogSource, nameof(DeletePricing));
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Pricing not found.");
+                }
 
                 _context.Pricings.Remove(pricing);
                 _context.SaveChanges();
+
+                _logger.LogMethodStop(LogSource, nameof(DeletePricing));
                 return BaseResponse<string>.SuccessResponse("Pricing deleted successfully");
             }
             catch (Exception ex)
@@ -96,26 +107,28 @@ namespace coreworking_space_booking_backend.Services.PricingService
             }
         }
 
-        public BaseResponse<PricingResponse> GetPricingById(int id)
+        public BaseResponse<PricingResponse> GetPricingById(GetPricingByIdRequest request)
         {
             try
             {
-                _logger.LogMethodStart(LogSource, nameof(GetPricingById), id);
+                _logger.LogMethodStart(LogSource, nameof(GetPricingById), request);
 
-                var pricing = _context.Pricings.FirstOrDefault(p => p.Id == id);
+                Pricing pricing = _context.Pricings.FirstOrDefault(p => p.Id == request.Id);
                 if (pricing == null)
-                    return BaseResponse<PricingResponse>.ErrorResponse(StatusCodes.Status404NotFound, "Pricing not found.");
-
-                var response = new PricingResponse
                 {
-                    Id = pricing.Id,
-                    //ProductId = pricing.ProductId,
+                    _logger.LogMethodStop(LogSource, nameof(GetPricingById));
+                    return BaseResponse<PricingResponse>.ErrorResponse(StatusCodes.Status404NotFound, "Pricing not found.");
+                }
+
+                PricingResponse response = new PricingResponse
+                {
                     Hourly = pricing.HourlyRate,
                     Daily = pricing.DailyRate,
                     Monthly = pricing.MonthlyRate,
                     Yearly = pricing.YearlyRate
                 };
 
+                _logger.LogMethodStop(LogSource, nameof(GetPricingById));
                 return BaseResponse<PricingResponse>.SuccessResponse(response);
             }
             catch (Exception ex)
@@ -131,16 +144,17 @@ namespace coreworking_space_booking_backend.Services.PricingService
             {
                 _logger.LogMethodStart(LogSource, nameof(GetAllPricings));
 
-                var pricings = _context.Pricings.Select(p => new PricingResponse
-                {
-                    Id = p.Id,
-                    //ProductId = p.ProductId,
-                    Hourly = p.HourlyRate,
-                    Daily = p.DailyRate,
-                    Monthly = p.MonthlyRate,
-                    Yearly = p.YearlyRate
-                }).ToList();
+                List<PricingResponse> pricings = _context.Pricings
+                    .Select(p => new PricingResponse
+                    {
+                        Hourly = p.HourlyRate,
+                        Daily = p.DailyRate,
+                        Monthly = p.MonthlyRate,
+                        Yearly = p.YearlyRate
+                    })
+                    .ToList();
 
+                _logger.LogMethodStop(LogSource, nameof(GetAllPricings));
                 return BaseResponse<List<PricingResponse>>.SuccessResponse(pricings);
             }
             catch (Exception ex)

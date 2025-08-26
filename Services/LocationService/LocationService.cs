@@ -33,6 +33,7 @@ namespace coreworking_space_booking_backend.Services.LocationService
                 {
                     Name = request.Name,
                     Address = request.Address,
+                    LocationUrl = request.Url,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 };
@@ -40,6 +41,7 @@ namespace coreworking_space_booking_backend.Services.LocationService
                 _context.Locations.Add(location);
                 _context.SaveChanges();
 
+                _logger.LogMethodStop(LogSource, nameof(CreateLocation));
                 return BaseResponse<string>.SuccessResponse("Location created successfully");
             }
             catch (Exception ex)
@@ -53,17 +55,18 @@ namespace coreworking_space_booking_backend.Services.LocationService
         {
             try
             {
-                var locations = _context.Locations
+                List<LocationResponse> locations = _context.Locations
                     .Where(l => l.IsActive)
                     .Select(l => new LocationResponse
                     {
                         Id = l.Id,
                         Name = l.Name,
                         Address = l.Address,
-                        
-                    }).ToList();
+                        Url = l.LocationUrl
+                    })
+                    .ToList();
 
-                if (!locations.Any())
+                if (locations.Count == 0)
                     return BaseResponse<List<LocationResponse>>.ErrorResponse(StatusCodes.Status404NotFound, "No locations found");
 
                 return BaseResponse<List<LocationResponse>>.SuccessResponse(locations, "Locations retrieved successfully");
@@ -79,17 +82,17 @@ namespace coreworking_space_booking_backend.Services.LocationService
         {
             try
             {
-                var location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
+                Location location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
 
                 if (location == null)
                     return BaseResponse<LocationResponse>.ErrorResponse(StatusCodes.Status404NotFound, "Location not found");
 
-                var response = new LocationResponse
+                LocationResponse response = new LocationResponse
                 {
                     Id = location.Id,
                     Name = location.Name,
                     Address = location.Address,
-                    
+                    Url = location.LocationUrl
                 };
 
                 return BaseResponse<LocationResponse>.SuccessResponse(response);
@@ -105,13 +108,14 @@ namespace coreworking_space_booking_backend.Services.LocationService
         {
             try
             {
-                var location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
+                Location location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
 
                 if (location == null)
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Location not found");
 
                 location.Name = request.Name;
                 location.Address = request.Address;
+                location.LocationUrl = request.Url;
                 location.UpdatedAt = DateTime.UtcNow;
 
                 _context.SaveChanges();
@@ -129,7 +133,7 @@ namespace coreworking_space_booking_backend.Services.LocationService
         {
             try
             {
-                var location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
+                Location location = _context.Locations.FirstOrDefault(l => l.Id == request.Id && l.IsActive);
 
                 if (location == null)
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Location not found");

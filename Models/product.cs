@@ -35,11 +35,10 @@ namespace coreworking_space_booking_backend.Models
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
 
-        [Column("features")]
-        public string Features { get; set; }
+        
 
-        [Column("images")]
-        public string Images { get; set; }
+        //[Column("images")]
+        //public string Images { get; set; }
 
         [Column("availability")]
         public string Availability { get; set; }

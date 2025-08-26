@@ -9,6 +9,8 @@ namespace coreworking_space_booking_backend.Dtos.Requests.Location
 
         [Required]
         public string Address { get; set; }
+
+        public string Url { get; set; }
     }
 
     public class UpdateLocationRequest : LocationRequest

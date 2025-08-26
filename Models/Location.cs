@@ -17,6 +17,10 @@ namespace coreworking_space_booking_backend.Models
         [Column("address")]
         public string Address { get; set; }
 
+        [Column("location_url")]
+        public string LocationUrl { get; set; }
+
+
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
 

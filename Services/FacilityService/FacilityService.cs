@@ -4,6 +4,10 @@ using coreworking_space_booking_backend.Dtos.Responses;
 using coreworking_space_booking_backend.Dtos.Responses.Facility;
 using coreworking_space_booking_backend.Helpers.Logger;
 using coreworking_space_booking_backend.Models.Facility;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace coreworking_space_booking_backend.Services.FacilityService
 {
@@ -19,12 +23,14 @@ namespace coreworking_space_booking_backend.Services.FacilityService
             _appLogger = appLogger;
             _logSource = GetType().Name;
         }
+
+
         public BaseResponse<string> CreateFacility(FacilityCreateRequestDto request)
         {
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(CreateFacility), request);
-                
+
                 Facility facility = new Facility
                 {
                     FacilityId = request.FacilityId,
@@ -41,9 +47,8 @@ namespace coreworking_space_booking_backend.Services.FacilityService
                 _context.Facilities.Add(facility);
                 _context.SaveChanges();
 
-                _appLogger.LogMethodStop(_logSource, nameof(CreateFacility));              
+                _appLogger.LogMethodStop(_logSource, nameof(CreateFacility));
                 return BaseResponse<string>.CreateSuccessResponse();
-
             }
             catch (Exception ex)
             {
@@ -59,14 +64,13 @@ namespace coreworking_space_booking_backend.Services.FacilityService
             {
                 _appLogger.LogMethodStart(_logSource, nameof(GetFacilityById), request);
 
-                var facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId && !f.IsDeleted);
-
+                Facility facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId && !f.IsDeleted);
                 if (facility == null)
                 {
                     return BaseResponse<FacilityDetailsResponseDto>.ErrorResponse(StatusCodes.Status404NotFound, "Facilities not found or has been deleted");
                 }
 
-                var responseDto = new FacilityDetailsResponseDto
+                FacilityDetailsResponseDto responseDto = new FacilityDetailsResponseDto
                 {
                     FacilityId = facility.FacilityId,
                     FacilityName = facility.FacilityName,
@@ -78,6 +82,8 @@ namespace coreworking_space_booking_backend.Services.FacilityService
                     IsDefault = facility.IsDefault
                 };
 
+                responseDto.IsDefault = facility.IsDefault;
+
                 _appLogger.LogMethodStop(_logSource, nameof(GetFacilityById));
                 return BaseResponse<FacilityDetailsResponseDto>.SuccessResponse(responseDto, "Facilities retrieved successfully");
             }
@@ -88,22 +94,24 @@ namespace coreworking_space_booking_backend.Services.FacilityService
             }
         }
 
-        public BaseResponse<List<FacilityListResponseDto>>GetFacilityList()
+        public BaseResponse<List<FacilityListResponseDto>> GetFacilityList()
         {
             try
             {
-                var facilities = _context.Facilities
+                List<FacilityListResponseDto> facilities = _context.Facilities
                     .Where(f => !f.IsDeleted)
                     .Select(f => new FacilityListResponseDto
                     {
                         facilityId = f.FacilityId,
                         facilityName = f.FacilityName
-                    }).ToList();
+                    })
+                    .ToList();
 
                 return BaseResponse<List<FacilityListResponseDto>>.SuccessResponse(facilities, "Facilities retrieved successfully");
             }
             catch (Exception ex)
             {
+                _appLogger.LogError(_logSource, nameof(GetFacilityList), ex);
                 return BaseResponse<List<FacilityListResponseDto>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Failed to retrieve facilities");
             }
         }
@@ -114,7 +122,7 @@ namespace coreworking_space_booking_backend.Services.FacilityService
             {
                 _appLogger.LogMethodStart(_logSource, nameof(UpdateFacility), request);
 
-                var facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId && !f.IsDeleted);
+                Facility facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId && !f.IsDeleted);
                 if (facility == null)
                 {
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Facilities not found or has been deleted");
@@ -141,18 +149,18 @@ namespace coreworking_space_booking_backend.Services.FacilityService
         }
 
         public BaseResponse<string> DeleteFacility(FacilityDeleteRequestDto request)
-{
+        {
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(DeleteFacility), request);
 
-                var facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId);
+                Facility facility = _context.Facilities.FirstOrDefault(f => f.FacilityId == request.FacilityId);
                 if (facility == null)
                 {
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Facilities not found");
                 }
 
-                facility.IsDeleted = true; 
+                facility.IsDeleted = true;
                 _context.SaveChanges();
 
                 _appLogger.LogMethodStop(_logSource, nameof(DeleteFacility));
@@ -164,7 +172,5 @@ namespace coreworking_space_booking_backend.Services.FacilityService
                 return BaseResponse<string>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal Server Error.");
             }
         }
-
-
     }
 }

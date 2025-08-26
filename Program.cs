@@ -13,6 +13,7 @@ using coreworking_space_booking_backend.Services.AdminService;
 using coreworking_space_booking_backend.Services.LocationService;
 using coreworking_space_booking_backend.Services.PaymentService;
 using coreworking_space_booking_backend.Services.PricingService;
+using coreworking_space_booking_backend.Services.AdvertisingService;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +22,9 @@ using PayMedia.DotNet.Utils.Logger.Configs;
 using System.Text;
 using System.Text.Json;
 using coreworking_space_booking_backend.Helpers.ImageUpload;
+using coreworking_space_booking_backend.Models;
+using coreworking_space_booking_backend.Services.SubscriptionService;
+using coreworking_space_booking_backend.Services.RatingService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +72,11 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPricingService, PricingService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<IAdvertisingService, AdvertisingService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<ImageUploadHelper>();
+
 
 
 

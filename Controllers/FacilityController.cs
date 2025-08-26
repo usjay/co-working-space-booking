@@ -35,7 +35,7 @@ namespace coreworking_space_booking_backend.Controllers
         }
 
 
-        [HttpGet("get-facility-list")]
+        [HttpPost("get-facility-list")]
         public IActionResult GetFacilityList()
         {
             BaseResponse<List<FacilityListResponseDto>> result = _facilityService.GetFacilityList();

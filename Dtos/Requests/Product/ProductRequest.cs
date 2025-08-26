@@ -17,7 +17,7 @@ namespace coreworking_space_booking_backend.Dtos.Requests.Product
         [Required]
         public string Type { get; set; }
 
-        //public int LocationId { get; set; }
+        public int LocationId { get; set; }
         public string OperationHours { get; set; }
         public int Capacity { get; set; }
 
@@ -31,6 +31,12 @@ namespace coreworking_space_booking_backend.Dtos.Requests.Product
     {
         [Required]
         public int Id { get; set; }
+
+        public int LocationId { get; set; }
+
+        public int CreatedAt { get; set; }
+
+        
     }
 
     public class GetProductByIdRequest
