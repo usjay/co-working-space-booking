@@ -25,5 +25,8 @@ namespace coreworking_space_booking_backend.Dtos.Requests.Booking
 
         public string FacilityCode { get; set; }
 
+
+        public DateTime StartTime { get; set; } 
+        public DateTime EndTime { get; set; }
     }
 }

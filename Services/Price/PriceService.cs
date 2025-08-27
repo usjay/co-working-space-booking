@@ -32,6 +32,7 @@ namespace coreworking_space_booking_backend.Services.PricingService
                 Pricing pricing = new Pricing
                 {
                     ProductId = request.ProductId,
+                    LocationId = request.LocationId,   
                     HourlyRate = request.Hourly,
                     DailyRate = request.Daily,
                     MonthlyRate = request.Monthly,
@@ -68,6 +69,7 @@ namespace coreworking_space_booking_backend.Services.PricingService
                 pricing.DailyRate = request.Daily;
                 pricing.MonthlyRate = request.Monthly;
                 pricing.YearlyRate = request.Yearly;
+                pricing.LocationId = request.LocationId;   
 
                 _context.SaveChanges();
 
@@ -125,7 +127,8 @@ namespace coreworking_space_booking_backend.Services.PricingService
                     Hourly = pricing.HourlyRate,
                     Daily = pricing.DailyRate,
                     Monthly = pricing.MonthlyRate,
-                    Yearly = pricing.YearlyRate
+                    Yearly = pricing.YearlyRate,
+                   
                 };
 
                 _logger.LogMethodStop(LogSource, nameof(GetPricingById));

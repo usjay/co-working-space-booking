@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using coreworking_space_booking_backend.Models.coreworking_space_booking_backend.Models;
 
 namespace coreworking_space_booking_backend.Models
 {
@@ -11,11 +12,17 @@ namespace coreworking_space_booking_backend.Models
         [Column("product_id")]
         public int ProductId { get; set; }
 
+        [Column("name")]
+        public string Name { get; set; }
+
         [Column("company_id")]
         public int CompanyId { get; set; }
 
-        [Column("name")]
-        public string Name { get; set; }
+       
+
+        [Column("description")]
+        public string Discription { get; set; }  
+
 
         [Column("type")]
         public string Type { get; set; }
@@ -29,13 +36,14 @@ namespace coreworking_space_booking_backend.Models
         [Column("capacity")]
         public int Capacity { get; set; }
 
-        [Column("image")]
-        public string Image { get; set; }
+        
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
 
-        
+        public virtual ICollection<ImageStore> Images { get; set; }
+
+
 
         //[Column("images")]
         //public string Images { get; set; }
@@ -50,5 +58,7 @@ namespace coreworking_space_booking_backend.Models
         [Column("updated_at")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedAt { get; set; }
+
+
     }
 }

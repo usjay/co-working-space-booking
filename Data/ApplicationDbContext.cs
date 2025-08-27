@@ -7,6 +7,7 @@ using coreworking_space_booking_backend.Models.Booking;
 using coreworking_space_booking_backend.Models.Permission;
 using coreworking_space_booking_backend.Models.CardDetails;
 using coreworking_space_booking_backend.Controllers;
+using coreworking_space_booking_backend.Models.coreworking_space_booking_backend.Models;
 
 namespace coreworking_space_booking_backend.Data
 {
@@ -25,6 +26,8 @@ namespace coreworking_space_booking_backend.Data
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<CardDetail> CardDetails { get; set; }
+      
+        public virtual DbSet<ImageStore> ImageStores { get; set; }
 
         public ApplicationDbContext()
         {
