@@ -1,12 +1,14 @@
 ﻿using coreworking_space_booking_backend.Dtos.Requests.Product;
+
 using coreworking_space_booking_backend.Dtos.Responses;
+using coreworking_space_booking_backend.Dtos.Responses.Product;
 using coreworking_space_booking_backend.Services.ProductService;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace coreworking_space_booking_backend.Controllers
 {
-    [Route("api/products")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -17,34 +19,57 @@ namespace coreworking_space_booking_backend.Controllers
             _productService = productService;
         }
 
-        [HttpPost("create")]
-        public BaseResponse<string> Create(ProductRequest request)
+        [HttpPost("create-product")]
+        public IActionResult CreateProduct([FromForm] ProductRequest request)
         {
-            return _productService.CreateProduct(request);
+            BaseResponse<string> result = _productService.CreateProduct(request);
+            return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("get-all")]
-        public BaseResponse<List<ProductRequest>> GetAll()
+        [HttpPost("get-product-list")]
+        public IActionResult GetProductList()
         {
-            return _productService.GetAllProducts();
+            BaseResponse<List<ProductResponse>> result = _productService.GetAllProducts();
+            return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("get-by-id")]
-        public BaseResponse<string> GetById(GetProductByIdRequest request)
+        [HttpPost("get-product-by-id")]
+        public IActionResult GetProductById([FromBody] GetProductByIdRequest request)
         {
-            return _productService.GetProductById(request);
+            BaseResponse<ProductResponse> result = _productService.GetProductById(request);
+            return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("update")]
-        public BaseResponse<string> Update(UpdateProductRequest request)
+        [HttpPost("update-product")]
+        public IActionResult UpdateProduct([FromForm] UpdateProductRequest request)
         {
-            return _productService.UpdateProduct(request);
+            BaseResponse<string> result = _productService.UpdateProduct(request);
+            return StatusCode(result.StatusCode, result);
         }
 
-        [HttpPost("delete")]
-        public BaseResponse<string> Delete(DeleteProductRequest request)
+        [HttpPost("delete-product")]
+        public IActionResult DeleteProduct([FromBody] DeleteProductRequest request)
         {
-            return _productService.DeleteProduct(request);
+            BaseResponse<string> result = _productService.DeleteProduct(request);
+            return StatusCode(result.StatusCode, result);
         }
+
+       
+
+      
+        [HttpPost("filter-products")]
+        public IActionResult FilterProducts([FromBody] ProductFilterRequest request)
+        {
+            BaseResponse<List<ProductResponse>> result = _productService.GetProductsByFilter(request);
+            return StatusCode(result.StatusCode, result);
+        }
+
+
+        //[HttpPost("sorted")]
+        //public ActionResult<BaseResponse<List<ProductResponse>>> GetSortedProducts([FromBody] ProductSortRequest request)
+        //{
+        //    BaseResponse<List<ProductResponse>> response = _productService.GetSortedProducts(request);
+        //    return StatusCode(response.StatusCode, response);
+        //}
     }
 }

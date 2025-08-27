@@ -114,18 +114,20 @@ namespace coreworking_space_booking_backend.Services.PaymentService
 
         public BaseResponse<List<PaymentResponse>> GetAllPayments()
         {
-            var payments = _context.Payments.Select(payment => new PaymentResponse
-            {
-                PaymentId = payment.PaymentId,
-                UserId = payment.UserId,
-                ReferenceNumber = payment.ReferenceNumber,
-                TransactionId = payment.TransactionId,
-                Amount = payment.Amount,
-                PaymentMethod = payment.PaymentMethod,
-                IsPaid = payment.IsPaid
-            }).ToList();
+            var responses = _context.Payments
+                .Select(payment => new PaymentResponse
+                {
+                    PaymentId = payment.PaymentId,
+                    UserId = payment.UserId,
+                    ReferenceNumber = payment.ReferenceNumber,
+                    TransactionId = payment.TransactionId,
+                    Amount = payment.Amount,
+                    PaymentMethod = payment.PaymentMethod,
+                    IsPaid = payment.IsPaid
+                })
+                .ToList();
 
-            return BaseResponse<List<PaymentResponse>>.SuccessResponse(payments);
+            return BaseResponse<List<PaymentResponse>>.SuccessResponse(responses);
         }
     }
 }

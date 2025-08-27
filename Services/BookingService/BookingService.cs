@@ -4,6 +4,10 @@ using coreworking_space_booking_backend.Dtos.Responses;
 using coreworking_space_booking_backend.Dtos.Responses.Booking;
 using coreworking_space_booking_backend.Helpers.Logger;
 using coreworking_space_booking_backend.Models.Booking;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace coreworking_space_booking_backend.Services.BookingService
 {
@@ -35,8 +39,11 @@ namespace coreworking_space_booking_backend.Services.BookingService
                     LocationId = request.LocationId,
                     PaymentId = request.PaymentId,
                     FacilityId = request.FacilityId,
+                    StartTime = request.StartTime,
+                    EndTime = request.EndTime,
+
                     IsOnetimeChanged = false,
-                    IsCanseled = false
+                    IsCansled = false
                 };
 
                 _context.Bookings.Add(booking);
@@ -44,7 +51,6 @@ namespace coreworking_space_booking_backend.Services.BookingService
 
                 _appLogger.LogMethodStop(_logSource, nameof(CreateBooking));
                 return BaseResponse<string>.CreateSuccessResponse();
-
             }
             catch (Exception ex)
             {
@@ -53,20 +59,20 @@ namespace coreworking_space_booking_backend.Services.BookingService
             }
         }
 
-
         public BaseResponse<BookingDetailsResponseDto> GetBookingById(BookingDetailsRequestDto request)
         {
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(GetBookingById), request);
-                var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId && !b.IsCanseled);
+
+                Booking booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId && !b.IsCansled);
 
                 if (booking == null)
                 {
                     return BaseResponse<BookingDetailsResponseDto>.ErrorResponse(StatusCodes.Status404NotFound, "Bookings not found or has been canseled");
                 }
 
-                var responseDto = new BookingDetailsResponseDto
+                BookingDetailsResponseDto responseDto = new BookingDetailsResponseDto
                 {
                     BookingId = booking.BookingId,
                     UserId = booking.UserId,
@@ -93,9 +99,13 @@ namespace coreworking_space_booking_backend.Services.BookingService
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(GetBookingList));
-                var Bookings = _context.Bookings
-                    .Where(b => !b.IsCanseled)
-                    .Select(b => new BookingListResponseDto
+
+                List<Booking> bookings = _context.Bookings.Where(b => !b.IsCansled).ToList();
+
+                List<BookingListResponseDto> bookingList = new List<BookingListResponseDto>();
+                foreach (Booking b in bookings)
+                {
+                    BookingListResponseDto dto = new BookingListResponseDto
                     {
                         BookingId = b.BookingId,
                         UserId = b.UserId,
@@ -105,10 +115,12 @@ namespace coreworking_space_booking_backend.Services.BookingService
                         PaymentId = b.PaymentId,
                         FacilityId = b.FacilityId,
                         IsOnetimeChanged = b.IsOnetimeChanged,
-                    }).ToList();
+                    };
+                    bookingList.Add(dto);
+                }
 
                 _appLogger.LogMethodStop(_logSource, nameof(GetBookingList));
-                return BaseResponse<List<BookingListResponseDto>>.SuccessResponse(Bookings, "Bookings retrieved successfully");
+                return BaseResponse<List<BookingListResponseDto>>.SuccessResponse(bookingList, "Bookings retrieved successfully");
             }
             catch (Exception ex)
             {
@@ -122,7 +134,8 @@ namespace coreworking_space_booking_backend.Services.BookingService
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(UpdateBooking), request);
-                var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId && !b.IsCanseled);
+
+                Booking booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId && !b.IsCansled);
                 if (booking == null)
                 {
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Bookings not found or has been deleted");
@@ -154,13 +167,14 @@ namespace coreworking_space_booking_backend.Services.BookingService
             try
             {
                 _appLogger.LogMethodStart(_logSource, nameof(CanselBooking), request);
-                var booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId);
+
+                Booking booking = _context.Bookings.FirstOrDefault(b => b.BookingId == request.BookingId);
                 if (booking == null)
                 {
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Bookings not found");
                 }
 
-                booking.IsCanseled = true;
+                booking.IsCansled = true;
                 _context.SaveChanges();
 
                 _appLogger.LogMethodStop(_logSource, nameof(CanselBooking));
@@ -172,6 +186,5 @@ namespace coreworking_space_booking_backend.Services.BookingService
                 return BaseResponse<string>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal Server Error.");
             }
         }
-
     }
 }

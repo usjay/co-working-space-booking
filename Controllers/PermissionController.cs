@@ -2,55 +2,50 @@
 using coreworking_space_booking_backend.Dtos.Responses;
 using coreworking_space_booking_backend.Dtos.Responses.Permission;
 using coreworking_space_booking_backend.Services.PermissionService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace coreworking_space_booking_backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/permissions")]
     [ApiController]
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
-        public PermissionController(IPermissionService PermissionService)
+
+        public PermissionController(IPermissionService permissionService)
         {
-            _permissionService = PermissionService;
+            _permissionService = permissionService;
         }
 
-        [HttpPost("create-permission")]
-        public IActionResult CreatePermission([FromBody] PermissionCreateRequestDto request)
+        [HttpPost("create")]
+        public BaseResponse<string> Create(PermissionCreateRequestDto request)
         {
-            BaseResponse<string> result = _permissionService.CreatePermission(request);
-            return StatusCode(result.StatusCode, result);
+            return _permissionService.CreatePermission(request);
         }
 
-        [HttpGet("get-permission-list")]
-        public IActionResult GetPermissionList()
+        [HttpPost("get-all")]
+        public BaseResponse<List<PermissionListResponseDto>> GetAll()
         {
-            BaseResponse<List<PermissionListResponseDto>> result = _permissionService.GetPermissionList();
-            return StatusCode(result.StatusCode, result);
+            return _permissionService.GetPermissionList();
         }
 
-        [HttpPost("update-permission")]
-        public IActionResult UpdatePermission([FromBody] PermissionUpdateRequestDto request)
+        [HttpPost("update")]
+        public BaseResponse<string> Update(PermissionUpdateRequestDto request)
         {
-            BaseResponse<string> result = _permissionService.UpdatePermission(request);
-            return StatusCode(result.StatusCode, result);
+            return _permissionService.UpdatePermission(request);
         }
 
-        [HttpPost("delete-permission")]
-        public IActionResult DeletePermission([FromBody] PermissionDeleteRequestDto request)
+        [HttpPost("delete")]
+        public BaseResponse<string> Delete(PermissionDeleteRequestDto request)
         {
-            BaseResponse<string> result = _permissionService.DeletePermission(request);
-            return StatusCode(result.StatusCode, result);
+            return _permissionService.DeletePermission(request);
         }
 
-        [HttpPost("get-permissions-by-role")]
-        public IActionResult GetPermissionsByRoleId([FromBody] PermissionDetailsRequestDto request)
+        [HttpPost("get-by-role")]
+        public BaseResponse<List<PermissionDetailsResponseDto>> GetByRole(PermissionDetailsRequestDto request)
         {
-            BaseResponse<List<PermissionDetailsResponseDto>> result = _permissionService.GetPermissionsByRoleId(request);
-            return StatusCode(result.StatusCode, result);
+            return _permissionService.GetPermissionsByRoleId(request);
         }
-
     }
 }

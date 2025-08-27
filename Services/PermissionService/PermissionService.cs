@@ -1,12 +1,13 @@
 ﻿using coreworking_space_booking_backend.Data;
-using coreworking_space_booking_backend.Dtos.Requests.Facility;
 using coreworking_space_booking_backend.Dtos.Requests.Permission;
 using coreworking_space_booking_backend.Dtos.Responses;
-using coreworking_space_booking_backend.Dtos.Responses.Facility;
 using coreworking_space_booking_backend.Dtos.Responses.Permission;
 using coreworking_space_booking_backend.Helpers.Logger;
-using coreworking_space_booking_backend.Models.Facility;
 using coreworking_space_booking_backend.Models.Permission;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace coreworking_space_booking_backend.Services.PermissionService
 {
@@ -42,7 +43,6 @@ namespace coreworking_space_booking_backend.Services.PermissionService
 
                 _appLogger.LogMethodStop(_logSource, nameof(CreatePermission));
                 return BaseResponse<string>.CreateSuccessResponse();
-
             }
             catch (Exception ex)
             {
@@ -55,18 +55,20 @@ namespace coreworking_space_booking_backend.Services.PermissionService
         {
             try
             {
-                var permission = _context.Permissions
+                List<PermissionListResponseDto> permissions = _context.Permissions
                     .Where(p => !p.IsDeleted)
                     .Select(p => new PermissionListResponseDto
                     {
                         PermissionId = p.PermissionId,
                         Description = p.Description
-                    }).ToList();
+                    })
+                    .ToList();
 
-                return BaseResponse<List<PermissionListResponseDto>>.SuccessResponse(permission, "Permissions retrieved successfully");
+                return BaseResponse<List<PermissionListResponseDto>>.SuccessResponse(permissions, "Permissions retrieved successfully");
             }
             catch (Exception ex)
             {
+                _appLogger.LogError(_logSource, nameof(GetPermissionList), ex);
                 return BaseResponse<List<PermissionListResponseDto>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Failed to retrieve permissions");
             }
         }
@@ -77,15 +79,13 @@ namespace coreworking_space_booking_backend.Services.PermissionService
             {
                 _appLogger.LogMethodStart(_logSource, nameof(UpdatePermission), request);
 
-                var permission = _context.Permissions.FirstOrDefault(p => p.PermissionId == request.PermissionId && !p.IsDeleted);
+                Permission permission = _context.Permissions.FirstOrDefault(p => p.PermissionId == request.PermissionId && !p.IsDeleted);
                 if (permission == null)
-                {
-                    return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Permissions not found or has been deleted");
-                }
+                    return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Permission not found or has been deleted");
 
-                permission.PermissionId = request.PermissionId;
                 permission.Description = request.Description;
                 permission.RoleId = request.RoleId;
+
                 _context.SaveChanges();
 
                 _appLogger.LogMethodStop(_logSource, nameof(UpdatePermission));
@@ -104,17 +104,15 @@ namespace coreworking_space_booking_backend.Services.PermissionService
             {
                 _appLogger.LogMethodStart(_logSource, nameof(DeletePermission), request);
 
-                var permission = _context.Permissions.FirstOrDefault(p => p.PermissionId == request.PermissionId);
+                Permission permission = _context.Permissions.FirstOrDefault(p => p.PermissionId == request.PermissionId);
                 if (permission == null)
-                {
-                    return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Permissions not found");
-                }
+                    return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Permission not found");
 
                 permission.IsDeleted = true;
                 _context.SaveChanges();
 
                 _appLogger.LogMethodStop(_logSource, nameof(DeletePermission));
-                return BaseResponse<string>.SuccessResponse("Permissions deleted successfully");
+                return BaseResponse<string>.SuccessResponse("Permission deleted successfully");
             }
             catch (Exception ex)
             {
@@ -129,37 +127,26 @@ namespace coreworking_space_booking_backend.Services.PermissionService
             {
                 _appLogger.LogMethodStart(_logSource, nameof(GetPermissionsByRoleId), request);
 
-                var permission = _context.Permissions
+                List<PermissionDetailsResponseDto> permissions = _context.Permissions
                     .Where(p => p.RoleId == request.RoleId && !p.IsDeleted)
+                    .Select(p => new PermissionDetailsResponseDto
+                    {
+                        PermissionId = p.PermissionId,
+                        Description = p.Description
+                    })
                     .ToList();
 
-                if (permission == null || !permission.Any())
-                {
-                    return BaseResponse<List<PermissionDetailsResponseDto>>.ErrorResponse(
-                        StatusCodes.Status404NotFound,
-                        "No permissions found for this role"
-                    );
-                }
-
-                var responseDtos = permission.Select(permission => new PermissionDetailsResponseDto
-                {
-                    PermissionId = permission.PermissionId,
-                    Description = permission.Description,
-                }).ToList();
+                if (permissions.Count == 0)
+                    return BaseResponse<List<PermissionDetailsResponseDto>>.ErrorResponse(StatusCodes.Status404NotFound, "No permissions found for this role");
 
                 _appLogger.LogMethodStop(_logSource, nameof(GetPermissionsByRoleId));
-                return BaseResponse<List<PermissionDetailsResponseDto>>.SuccessResponse(responseDtos, "Permissions retrieved successfully");
+                return BaseResponse<List<PermissionDetailsResponseDto>>.SuccessResponse(permissions, "Permissions retrieved successfully");
             }
             catch (Exception ex)
             {
                 _appLogger.LogError(_logSource, nameof(GetPermissionsByRoleId), ex);
-                return BaseResponse<List<PermissionDetailsResponseDto>>.ErrorResponse(
-                    StatusCodes.Status500InternalServerError,
-                    "Internal error, refer to the internal server logs for more information"
-                );
+                return BaseResponse<List<PermissionDetailsResponseDto>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal error, refer to internal server logs");
             }
         }
-
-
     }
 }

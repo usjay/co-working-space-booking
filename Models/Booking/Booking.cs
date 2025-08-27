@@ -51,7 +51,14 @@ namespace coreworking_space_booking_backend.Models.Booking
 
         [Required]
         [Column("is_cansled")]
-        public required bool IsCanseled { get; set; }
+        public required bool IsCansled { get; set; }
 
+        [Required]
+        [Column("start_time")]
+        public required DateTime StartTime { get; set; }
+
+        [Required]
+        [Column("end_time")]
+        public required DateTime EndTime { get; set; }
     }
 }

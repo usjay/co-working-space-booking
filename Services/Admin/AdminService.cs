@@ -31,7 +31,6 @@ namespace coreworking_space_booking_backend.Services.AdminService
             _logSource = GetType().Name;
         }
 
-      
         private string SaveAvatar(IFormFile avatar)
         {
             if (avatar == null) return null;
@@ -161,7 +160,7 @@ namespace coreworking_space_booking_backend.Services.AdminService
                     return BaseResponse<AdminResponse>.ErrorResponse(StatusCodes.Status404NotFound, "Admin not found.");
                 }
 
-                var response = new AdminResponse
+                AdminResponse response = new AdminResponse
                 {
                     Id = admin.Id,
                     FirstName = admin.FirstName,
@@ -192,22 +191,27 @@ namespace coreworking_space_booking_backend.Services.AdminService
 
                 List<Admin> admins = _context.Admins.Where(a => a.IsActive).ToList();
 
-                if (!admins.Any())
+                if (admins.Count == 0)
                     return BaseResponse<List<AdminResponse>>.ErrorResponse(StatusCodes.Status404NotFound, "No active admins found");
 
-                List<AdminResponse> response = admins.Select(a => new AdminResponse
+                List<AdminResponse> response = new List<AdminResponse>();
+                foreach (Admin a in admins)
                 {
-                    Id = a.Id,
-                    FirstName = a.FirstName,
-                    LastName = a.LastName,
-                    Email = a.Email,
-                    Phone = a.Phone,
-                    Company = a.Company,
-                    JobTitle = a.JobTitle,
-                    Bio = a.Bio,
-                    Avatar = a.Avatar,
-                    IsActive = a.IsActive
-                }).ToList();
+                    AdminResponse adminResponse = new AdminResponse
+                    {
+                        Id = a.Id,
+                        FirstName = a.FirstName,
+                        LastName = a.LastName,
+                        Email = a.Email,
+                        Phone = a.Phone,
+                        Company = a.Company,
+                        JobTitle = a.JobTitle,
+                        Bio = a.Bio,
+                        Avatar = a.Avatar,
+                        IsActive = a.IsActive
+                    };
+                    response.Add(adminResponse);
+                }
 
                 _appLogger.LogMethodStop(_logSource, nameof(GetAllAdmins));
                 return BaseResponse<List<AdminResponse>>.SuccessResponse(response, "Admins retrieved successfully");
@@ -218,6 +222,5 @@ namespace coreworking_space_booking_backend.Services.AdminService
                 return BaseResponse<List<AdminResponse>>.ErrorResponse(StatusCodes.Status500InternalServerError, "Internal server error.");
             }
         }
-
     }
 }

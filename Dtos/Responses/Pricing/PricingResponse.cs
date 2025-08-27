@@ -2,7 +2,7 @@
 {
     public class PricingResponse
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         //public int ProductId { get; set; }
         public decimal Hourly { get; set; }
         public decimal Daily { get; set; }

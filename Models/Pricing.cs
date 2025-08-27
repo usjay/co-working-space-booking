@@ -31,6 +31,11 @@ namespace coreworking_space_booking_backend.Models
         [Column("yearly_rate")]
         public decimal YearlyRate { get; set; }
 
+        [Column("location_id")]              
+        [Required]
+        public int LocationId { get; set; }
+
+
         [Column("created_at")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }

@@ -34,12 +34,14 @@ namespace coreworking_space_booking_backend.Services.RoleService
                     Name = request.Name,
                     Description = request.Description,
                     Type = request.Type,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    IsActive = true
                 };
 
                 _context.Roles.Add(role);
                 _context.SaveChanges();
 
+                _logger.LogMethodStop(LogSource, nameof(CreateRole));
                 return BaseResponse<string>.SuccessResponse("Role created successfully");
             }
             catch (Exception ex)
@@ -53,7 +55,9 @@ namespace coreworking_space_booking_backend.Services.RoleService
         {
             try
             {
-                var roles = _context.Roles
+                _logger.LogMethodStart(LogSource, nameof(GetAllRoles));
+
+                List<RoleResponse> roles = _context.Roles
                     .Where(r => r.IsActive)
                     .Select(r => new RoleResponse
                     {
@@ -61,12 +65,13 @@ namespace coreworking_space_booking_backend.Services.RoleService
                         Name = r.Name,
                         Description = r.Description,
                         Type = r.Type,
-                        IsActive = r.IsActive,
-                       
+                        IsActive = r.IsActive
                     })
                     .ToList();
 
-                if (!roles.Any())
+                _logger.LogMethodStop(LogSource, nameof(GetAllRoles));
+
+                if (roles.Count == 0)
                     return BaseResponse<List<RoleResponse>>.ErrorResponse(StatusCodes.Status404NotFound, "No roles found");
 
                 return BaseResponse<List<RoleResponse>>.SuccessResponse(roles);
@@ -82,19 +87,22 @@ namespace coreworking_space_booking_backend.Services.RoleService
         {
             try
             {
-                var role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
+                _logger.LogMethodStart(LogSource, nameof(GetRoleById));
+
+                Role role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
+
+                _logger.LogMethodStop(LogSource, nameof(GetRoleById));
 
                 if (role == null)
                     return BaseResponse<RoleResponse>.ErrorResponse(StatusCodes.Status404NotFound, "Role not found");
 
-                var response = new RoleResponse
+                RoleResponse response = new RoleResponse
                 {
                     Id = role.Id,
                     Name = role.Name,
                     Description = role.Description,
                     Type = role.Type,
-                    IsActive = role.IsActive,
-                    
+                    IsActive = role.IsActive
                 };
 
                 return BaseResponse<RoleResponse>.SuccessResponse(response);
@@ -110,7 +118,9 @@ namespace coreworking_space_booking_backend.Services.RoleService
         {
             try
             {
-                var role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
+                _logger.LogMethodStart(LogSource, nameof(UpdateRole));
+
+                Role role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
                 if (role == null)
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Role not found");
 
@@ -120,6 +130,8 @@ namespace coreworking_space_booking_backend.Services.RoleService
                 role.UpdatedAt = DateTime.UtcNow;
 
                 _context.SaveChanges();
+
+                _logger.LogMethodStop(LogSource, nameof(UpdateRole));
                 return BaseResponse<string>.SuccessResponse("Role updated successfully");
             }
             catch (Exception ex)
@@ -133,7 +145,9 @@ namespace coreworking_space_booking_backend.Services.RoleService
         {
             try
             {
-                var role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
+                _logger.LogMethodStart(LogSource, nameof(DeleteRole));
+
+                Role role = _context.Roles.FirstOrDefault(r => r.Id == request.Id && r.IsActive);
                 if (role == null)
                     return BaseResponse<string>.ErrorResponse(StatusCodes.Status404NotFound, "Role not found");
 
@@ -141,6 +155,8 @@ namespace coreworking_space_booking_backend.Services.RoleService
                 role.UpdatedAt = DateTime.UtcNow;
 
                 _context.SaveChanges();
+
+                _logger.LogMethodStop(LogSource, nameof(DeleteRole));
                 return BaseResponse<string>.SuccessResponse("Role deleted successfully");
             }
             catch (Exception ex)
