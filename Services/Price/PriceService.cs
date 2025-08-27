@@ -108,7 +108,7 @@ namespace coreworking_space_booking_backend.Services.PricingService
 
                 var response = new PricingResponse
                 {
-                    Id = pricing.Id,
+                    //Id = pricing.Id,
                     //ProductId = pricing.ProductId,
                     Hourly = pricing.HourlyRate,
                     Daily = pricing.DailyRate,
@@ -133,8 +133,8 @@ namespace coreworking_space_booking_backend.Services.PricingService
 
                 var pricings = _context.Pricings.Select(p => new PricingResponse
                 {
-                    Id = p.Id,
-                    //ProductId = p.ProductId,
+                    //Id = p.Id,
+                    ////ProductId = p.ProductId,
                     Hourly = p.HourlyRate,
                     Daily = p.DailyRate,
                     Monthly = p.MonthlyRate,

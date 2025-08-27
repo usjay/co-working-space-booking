@@ -35,6 +35,8 @@ namespace coreworking_space_booking_backend.Services.BookingService
                     LocationId = request.LocationId,
                     PaymentId = request.PaymentId,
                     FacilityId = request.FacilityId,
+                    StartTime = request.StartTime,
+                    EndTime = request.EndTime,
                     IsOnetimeChanged = false,
                     IsCanseled = false
                 };
@@ -75,6 +77,8 @@ namespace coreworking_space_booking_backend.Services.BookingService
                     LocationId = booking.LocationId,
                     PaymentId = booking.PaymentId,
                     FacilityId = booking.FacilityId,
+                    StartTime = booking.StartTime,
+                    EndTime = booking.EndTime,
                     IsOnetimeChanged = booking.IsOnetimeChanged,
                 };
 
@@ -104,6 +108,8 @@ namespace coreworking_space_booking_backend.Services.BookingService
                         LocationId = b.LocationId,
                         PaymentId = b.PaymentId,
                         FacilityId = b.FacilityId,
+                        StartTime = b.StartTime,
+                        EndTime = b.EndTime,
                         IsOnetimeChanged = b.IsOnetimeChanged,
                     }).ToList();
 
@@ -135,6 +141,8 @@ namespace coreworking_space_booking_backend.Services.BookingService
                 booking.LocationId = request.LocationId;
                 booking.PaymentId = request.PaymentId;
                 booking.FacilityId = request.FacilityId;
+                booking.StartTime = request.StartTime;
+                booking.EndTime = request.EndTime;
                 booking.IsOnetimeChanged = request.IsOnetimeChanged;
 
                 _context.SaveChanges();

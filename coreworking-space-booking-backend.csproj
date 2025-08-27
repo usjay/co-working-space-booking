@@ -29,11 +29,15 @@
   <ItemGroup>
     <Folder Include="Data\Seeds\" />
     <Folder Include="Assets\" />
+    <Folder Include="Dtos\Requests\NewFolder\" />
     <Folder Include="Dtos\Requests\Role\" />
+    <Folder Include="Dtos\Requests\Spaces\" />
     <Folder Include="Dtos\Responses\Role\" />
+    <Folder Include="Dtos\Responses\Space\" />
 
     <Folder Include="Logs\" />
     <Folder Include="Middlewares\" />
+    <Folder Include="Services\SpaceService\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

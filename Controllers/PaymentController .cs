@@ -7,8 +7,8 @@ using System.Collections.Generic;
 
 namespace coreworking_space_booking_backend.Controllers
 {
-    [Route("api/payments")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -19,33 +19,33 @@ namespace coreworking_space_booking_backend.Controllers
         }
 
         [HttpPost("create")]
-        public BaseResponse<string> Create(PaymentRequest request)
+        public BaseResponse<string> CreatePayment([FromBody] PaymentRequest request)
         {
             return _paymentService.CreatePayment(request);
         }
 
         [HttpPost("update")]
-        public BaseResponse<string> Update(UpdatePaymentRequest request)
+        public BaseResponse<string> UpdatePayment([FromBody] UpdatePaymentRequest request)
         {
             return _paymentService.UpdatePayment(request);
         }
 
         [HttpPost("delete")]
-        public BaseResponse<string> Delete(int paymentId)
+        public BaseResponse<string> DeletePayment([FromBody] int paymentId)
         {
             return _paymentService.DeletePayment(paymentId);
         }
 
-        [HttpPost("get-all")]
-        public BaseResponse<List<PaymentResponse>> GetAll()
-        {
-            return _paymentService.GetAllPayments();
-        }
-
         [HttpPost("get-by-id")]
-        public BaseResponse<PaymentResponse> GetById(GetPaymentByIdRequest request)
+        public BaseResponse<PaymentResponse> GetPaymentById([FromBody] GetPaymentByIdRequest request)
         {
             return _paymentService.GetPaymentById(request);
+        }
+
+        [HttpPost("get-all")]
+        public BaseResponse<List<PaymentResponse>> GetAllPayments()
+        {
+            return _paymentService.GetAllPayments();
         }
     }
 }

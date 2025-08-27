@@ -14,6 +14,10 @@ namespace coreworking_space_booking_backend.Models
         [Column("product_id")]
         public int ProductId { get; set; }
 
+
+        [Column("location_id")]
+        public int LocationId { get; set; }
+
         public Product Product { get; set; }
 
         [Required]
